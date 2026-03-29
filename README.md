@@ -13,7 +13,7 @@ A tick-by-tick mean-reversion trading system built on market microstructure anal
 ```
 Raw Ticks ──> Microstructure Engine ──> Regime Detection ──> Decision Engine ──> Execution
                   │                         │                      │                 │
-            GMM Density               HDBSCAN Clustering     Kelly Sizing      IB / Simulator
+            GMM Density               HMM State Inference    Kelly Sizing      IB / Simulator
             GARCH Vol                 KL-Divergence           Adaptive Exits    Rate Limiting
             Order Flow                Transition Detector     Signal Combiner   Slippage Model
             Entropy / Tails           Regime Labeling         Confidence Score  Impact Model
@@ -26,7 +26,7 @@ Raw Ticks ──> Microstructure Engine ──> Regime Detection ──> Decisio
 | **Ingestion** | `data/tick_stream.py`, `data/l2_orderbook.py` | Validated ticks, L2 snapshots |
 | **Feature Extraction** | `microstructure/pdf/`, `microstructure/moments.py`, `microstructure/entropy.py` | GMM density, moments (mu, sigma, skew, kurtosis), tail risk, entropy |
 | **State Construction** | `regime/state_vector.py` | 6-dimensional state vector |
-| **Regime Classification** | `regime/clustering.py`, `regime/transition.py` | Regime labels (Bull/Bear/Sideways), transition events |
+| **Regime Classification** | `regime/hmm.py`, `regime/transition.py` | Regime labels (Bull/Bear/Sideways), transition events |
 | **Signal Generation** | `alpha/feature_engine.py`, `alpha/return_predictor.py`, `alpha/signal_combiner.py` | Blended alpha signal (regime + online SGD predictor) |
 | **Decision** | `decision/entry_conditions.py`, `decision/sizing.py`, `decision/adaptive_exits.py` | Trade proposals with Kelly-sized positions |
 | **Risk** | `risk/kill_switch.py`, `risk/exposure.py`, `risk/tail_risk.py` | Position limits, drawdown guards, emergency flatten |
@@ -66,7 +66,7 @@ Maps the joint dynamics of drift (mu) and volatility (sigma) over time. The colo
 
 ### Regime Detection
 
-- **HDBSCAN Clustering** -- density-based regime identification with adaptive `min_cluster_size`
+- **Hidden Markov Model** -- probabilistic regime inference with Baum-Welch parameter estimation
 - **KL-Divergence Transitions** -- statistical detection of distribution shifts between windows
 - **PCA Projection** -- dimensionality-reduced transition strength via weighted delta vectors
 - **Bootstrap Signal Path** -- synthesizes transition events from mu-velocity when no regime change is detected but signal is strong
@@ -84,7 +84,7 @@ Pipeline: `TradeEligibility` -> `EntryConditions` -> `ConfidenceScorer` -> `Posi
 - **Kill Switch** -- global emergency flatten on drawdown, latency, or error-rate breach; wired into `on_tick()` and `_execute_trade()`
 - **Exposure Tracker** -- real-time position and notional exposure monitoring
 - **Tail Risk Model** -- EVT-based tail probability estimation
-- **Confidence Warmup** -- scaled to `min_cluster_size * 3` to prevent false triggers during startup
+- **Confidence Warmup** -- prevents false triggers during startup warm-up period
 
 ### Execution
 
@@ -178,7 +178,7 @@ microstructure-alpha/
 ├── microstructure/     # GMM density, moments, entropy, return calculations
 ├── monitoring/         # Alerts, model health, regime drift, watchdog daemon
 ├── optimization/       # Walk-forward optimizer, OOS validation, sensitivity analysis
-├── regime/             # HDBSCAN clustering, transition detection, state vectors
+├── regime/             # HMM regime inference, transition detection, state vectors
 ├── risk/               # Kill switch, exposure tracking, tail risk, stress tests
 ├── rust/               # Rust-accelerated core computations
 ├── scripts/            # Backtest runners, data tools, visualization scripts
