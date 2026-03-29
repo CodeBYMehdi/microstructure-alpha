@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Data files
+*.h5
+*.hdf5
+*.zst
+*.dbn.zst
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+
+# Logs
+*.log
+system.log
+error_log.txt
+decision_log.csv
+
+# Generated output
+*.png
+monte_carlo_results.png
+backtest_equity.png
+backtest_regimes.png
+outputs/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials vault (encrypted)
+config/.credentials.vault
+config/.credentials.salt
+config/credentials.py
+
+# Virtual environment
+venv/
+.env/
+env/
+.venv/
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Rust target
+target/
+
+# Data and CSV files
+*.db
+*.db-shm
+*.db-wal
+*.csv

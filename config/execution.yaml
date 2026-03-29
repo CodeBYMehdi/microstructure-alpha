@@ -1,0 +1,26 @@
+# Execution Configuration
+
+execution:
+  mode: "replay" # simulation | replay | live
+  data_source: "hdf5" # synthetic | hdf5 | csv
+  data_path: "data/sample_market_data.h5" # chemin pr hdf5 ou csv
+  
+  router:
+    max_retries: 3
+    timeout_ms: 500
+    
+  strategies:
+    trend:
+      style: "aggressive"
+      order_type: "limit" # ou market
+      urgency: "high"
+      
+    mean_reversion:
+      style: "passive"
+      order_type: "limit"
+      urgency: "low"
+      
+    liquidity_stress:
+      style: "twap"
+      order_type: "limit"
+      duration_ms: 5000

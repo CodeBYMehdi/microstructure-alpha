@@ -1,0 +1,21 @@
+# Execution Configuration — IBKR Paper Trading (NASDAQ)
+
+execution:
+  mode: "live"
+  data_source: "ibkr"
+  data_path: null
+
+  router:
+    max_retries: 3
+    timeout_ms: 2000
+
+  strategies:
+    mean_reversion:
+      style: "passive"
+      order_type: "limit"
+      urgency: "low"
+
+    aggressive:
+      style: "aggressive"
+      order_type: "market"
+      urgency: "high"

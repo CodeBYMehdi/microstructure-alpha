@@ -1,0 +1,10 @@
+# Paper Trading — Single Instrument (QQQ)
+# Start with one liquid instrument to validate the live pipeline.
+# Add more instruments after confirming data flow and fill quality.
+
+instruments:
+  - symbol: "QQQ"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0

@@ -1,0 +1,79 @@
+# Thresholds for Regime Transition and Risk
+# DOIT ETRE CALIBRÉ PAR INSTRUMENT
+
+regime:
+  transition_strength_min: 0.45  # confiance min pr accepter transition
+  stability_window: 100         # Ticks pr confirmer stabilité regime
+
+  # Clustering parameters
+  min_cluster_size: 8
+  min_samples: 2
+  window_size: 150              # smaller window — faster regime detection
+  update_frequency: 10          # Evaluate every 10 ticks — doubles signal evaluation rate
+
+  # metriques
+  kl_min: 0.02                  # Lowered — 0.05 rejected 30-50% of valid mean-reversion setups
+  projection_min: 0.01          # Lowered — strict projection gate was redundant with strength check
+
+  # HMM regime detection
+  hmm:
+    n_states: 4
+    learning_rate: 0.01
+    warmup_ticks: 150
+    min_confidence: 0.4
+    prior_strength: 1.0
+    emission_reg: 0.0001
+
+decision:
+  long:
+    skew_min: 0.1
+    tail_slope_min: 2.0
+  short:
+    volatility_min: 0.0005
+    skew_max: -0.2
+    kurtosis_min: 1.0
+  liquidity:
+    spread_max: 0.05            # 50 bps (accommodates synthetic data spreads)
+    depth_slope_min: 0.0        # Increasing depth
+  exit:
+    kl_stable_threshold: 0.01
+    entropy_acceleration_threshold: 1.0
+    fallback_strength_threshold: 0.20   # Balanced: catch more transitions but reject pure noise
+    stop_sigma_mult: 0.6        # Tighter stops — cut losers fast, R:R must favor wins
+    tp_sigma_mult: 1.2          # TP closer — mean-reversion captures partial moves
+    trail_sigma_mult: 0.5       # Aggressive trailing — lock in gains early
+    min_stop_pct: 0.001         # 0.10% min stop — tighter floor
+    min_tp_pct: 0.0015          # 0.15% min TP — capture small mean-reversion moves
+  sizing:
+    kelly_scale: 0.5           # Half-Kelly (derived from rolling win_rate & profit_factor)
+    base_size: 50              # Fallback when equity/stop unavailable
+    max_size_multiplier: 3.0
+
+risk:
+  max_position_size: 1000000    # Max notional
+  max_drawdown: 0.02            # 2% max drawdown
+  tail_risk_limit: 0.05         # 5% ES limite
+
+  # Kill switch triggers
+  confidence_floor: 0.3
+  regime_churn_limit: 5         # Transitions / min
+  slippage_tolerance: 0.005     # 50 bps (realistic for market orders)
+  var_position_limit_pct: 0.02  # Max position scaled by tail risk (2% base)
+
+  # Health
+  latency_budget_ms: 100.0
+  max_error_rate: 0.05
+
+pdf:
+  entropy_threshold: 5.0        # Max entropie avt invalidation
+  tail_slope_min: 1.5           # Minimum tail slope pr stabilité
+
+volatility:
+  garch_refit_interval: 200
+  garch_min_obs: 100
+
+microstructure_features:
+  vpin_bucket_size: 500
+  vpin_n_buckets: 50
+  kyle_lambda_window: 100
+  amihud_window: 200

@@ -1,0 +1,51 @@
+# NASDAQ Instruments Configuration — IBKR Paper Trading
+# Primary high-liquidity NASDAQ stocks for microstructure alpha
+
+instruments:
+  - symbol: "QQQ"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "AAPL"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "MSFT"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "NVDA"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "AMZN"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "META"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "TSLA"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0
+
+  - symbol: "GOOGL"
+    exchange: "SMART"
+    tick_size: 0.01
+    lot_size: 1.0
+    min_notional: 100.0

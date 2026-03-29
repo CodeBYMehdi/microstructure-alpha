@@ -1,0 +1,57 @@
+# Thresholds — NASDAQ Equities (Paper Trading)
+# Calibrated for $100k account, moderate risk
+
+regime:
+  transition_strength_min: 0.45
+  stability_window: 80
+  min_cluster_size: 30
+  min_samples: 5
+  window_size: 300
+  update_frequency: 30
+  kl_min: 0.03
+  projection_min: 0.8
+
+decision:
+  long:
+    skew_min: 0.05
+    tail_slope_min: 1.5
+  short:
+    volatility_min: 0.0003
+    skew_max: -0.1
+    kurtosis_min: 0.8
+  liquidity:
+    spread_max: 0.002         # 20 bps max spread (NASDAQ stocks typically < 5bps)
+    depth_slope_min: 0.0
+  exit:
+    kl_stable_threshold: 0.005
+    entropy_acceleration_threshold: 0.5
+    fallback_strength_threshold: 0.15   # Relaxed from 0.25 — more trades through fallback path
+    stop_sigma_mult: 1.0      # Tight stops — cut losers fast
+    tp_sigma_mult: 4.5        # Wide TPs — let mean-reversion play out
+    trail_sigma_mult: 1.0     # Tight trailing — lock in gains early
+    min_stop_pct: 0.0008      # 0.08% min stop — tight floor
+    min_tp_pct: 0.005         # 0.5% min TP — wide target floor
+    max_hold_base: 60
+  sizing:
+    kelly_scale: 0.5
+    base_size: 50
+    max_size_multiplier: 3.0
+    min_variance: 0.5
+    dwell_time_norm: 50.0
+
+risk:
+  max_position_size: 75000    # $75k max notional (moderate for $100k account)
+  max_drawdown: 0.03          # 3% max drawdown
+  tail_risk_limit: 0.05
+  confidence_floor: 0.25
+  regime_churn_limit: 8
+  slippage_tolerance: 0.005   # 50 bps tolerance for equities
+  live_slippage_tolerance: 0.002  # 20 bps for live/paper (tighter than simulation)
+  latency_budget_ms: 200.0
+  max_error_rate: 0.05
+  confidence_ema_alpha: 0.1
+  confidence_warmup: 30
+
+pdf:
+  entropy_threshold: 5.0
+  tail_slope_min: 1.5

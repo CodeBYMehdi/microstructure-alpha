@@ -1,0 +1,1 @@
+# Module de recherche alpha: features engineering, prediction de return, combi de signaux

@@ -1,0 +1,14 @@
+# Instruments Configuration
+
+instruments:
+  - symbol: "BTC-USDT"
+    exchange: "binance"
+    tick_size: 0.01
+    lot_size: 0.00001
+    min_notional: 10.0
+    
+  - symbol: "ETH-USDT"
+    exchange: "binance"
+    tick_size: 0.01
+    lot_size: 0.0001
+    min_notional: 10.0
